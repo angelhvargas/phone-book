@@ -1,0 +1,26 @@
+Acceptance criteria:
+- List all entries in the phone book.
+- Create a new entry to the phone book.
+- Remove an existing entry in the phone book.
+- Update an existing entry in the phone book.
+- Search for entries in the phone book by surname.
+
+Test cases
+
+- can create instance of PhoneBook class
+- can connect to the database
+- can write to the database
+- can create a new entry using the PhoneBook class
+- can list entries using the PhoneBook class
+- can delete entry from the PhoneBook class
+- can update an existing entry using the PhoneBook class
+- can search for entries using the PhoneBook class
+- can execute http request to create phone book entry
+- can execute http request to delete a phone book entry
+- can execute http request to update a phone book entry
+- can execute http requests to list phone book entries
+
+Functional
+- can CRUD the PhoneBook using the API interface
+
+
