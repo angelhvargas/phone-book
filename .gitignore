@@ -2,5 +2,6 @@
 .idea
 .coverage
 *.txt
+__pycache__
 htmlcov
 venv
