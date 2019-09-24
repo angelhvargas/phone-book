@@ -7,9 +7,10 @@ Acceptance criteria:
 
 Test cases
 
-- can create instance of PhoneBook class
-- can connect to the database
-- can write to the database
+X can create instance of PhoneBook class
+X can create instance of Database class
+X can connect to the database
+X can write to the database
 - can create a new entry using the PhoneBook class
 - can list entries using the PhoneBook class
 - can delete entry from the PhoneBook class
