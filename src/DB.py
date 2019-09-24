@@ -1,10 +1,10 @@
-# Database.py
+# DB.py
 import sqlite3
 import logging
 import os
 
 
-class Database:
+class DB:
 
     DEFAULT_PATH = 'database.sqlite3'
     ERROR_LOG_FILENAME = 'error_sqlite.log'
@@ -29,7 +29,7 @@ class Database:
                 detect_types=sqlite3.PARSE_DECLTYPES
             )
         except sqlite3.Error as e:
-            self.logger.error("Database error: {}" % e)
+            self.logger.error("DB error: {}" % e)
             return False
 
         return self.con
