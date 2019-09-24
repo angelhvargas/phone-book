@@ -1,6 +1,6 @@
 import pytest
 
-from src.Database import Database
+from src.DB import DB
 
 
 @pytest.fixture
@@ -18,7 +18,7 @@ def database_connection():
     database connection
     :return: None
     """
-    return Database("test_database.sqlite3").connect()
+    return DB("test_database.sqlite3").connect()
 
 
 @pytest.mark.usefixtures("database_path", "database_connection")
@@ -26,7 +26,7 @@ class TestDatabase:
     """
     Unit testing for the database connectivity
     """
-    database_connection = Database("test_database.sqlite3").connect()
+    database_connection = DB("test_database.sqlite3").connect()
 
     @classmethod
     def setup_class(cls):
