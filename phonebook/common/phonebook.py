@@ -1,10 +1,10 @@
-from src.DB import DB
-from src.Contact import ContactEntry
+from phonebook.data.db import DB
+from phonebook.common.contactentry import ContactEntry
 
 
 class PhoneBook:
     """
-    PhoneBook class
+    common class
 
     Describe and controls behaviour of the operations in the phone book.
     """
@@ -19,7 +19,7 @@ class PhoneBook:
         """
         Create an entry in the Phone Book
         :param contact_entry:
-        :return: db index
+        :return: data index
         """
         query = ('''INSERT INTO phone_book
         (surname, firstname, phone_number, address)
@@ -32,7 +32,7 @@ class PhoneBook:
             contact_entry.address
         )
 
-        result = self.db.cursor().execute(query, value)
+        result = self.db.execute(query, value)
         self.db.commit()
         return result.lastrowid
 
@@ -40,7 +40,7 @@ class PhoneBook:
         """
         Find an entry in the Phone Book based on their id
         :param _id:
-        :return:
+        :return: return a dict with the data queried from the database
         """
         query = ('''SELECT * FROM phone_book
         WHERE id=?''')
@@ -49,14 +49,14 @@ class PhoneBook:
             str(_id)
         )
 
-        result = self.db.cursor().execute(query, value)
+        result = self.db.execute(query, value)
         return result.fetchone()
 
-    def update(self, **kwargs) -> dict:
+    def update(self, **kwargs) -> int:
         """
         Update phone book entry
         :param kwargs:
-        :return: dict
+        :return: number of entries updated
         """
         cols = ""
         idx = kwargs.pop('idx')
@@ -71,16 +71,17 @@ class PhoneBook:
 
         query = "UPDATE phone_book SET " + cols + " WHERE id=?"
 
-        self.db.cursor().execute(query, values)
-        row_count = self.db.cursor().rowcount
+        result = self.db.execute(query, values)
+        self.db.commit()
+        row_count = result.rowcount
 
         return row_count
 
-    def delete(self, _id) -> dict:
+    def delete(self, _id) -> int:
         """
         Find an entry in the Phone Book based on their id and delete it
         :param _id:
-        :return:
+        :return: number of entries deleted
         """
         query = ('''DELETE FROM phone_book
         WHERE id=?''')
@@ -89,9 +90,20 @@ class PhoneBook:
             str(_id)
         )
 
-        result = self.db.cursor().execute(query, value)
+        result = self.db.execute(query, value)
         self.db.commit()
         return result.rowcount
+
+    def search(self, _term, _col=None) -> dict:
+        """
+        Search for an entry in the common
+        :param _term:
+        :param _col:
+        :return:
+        """
+
+
+
 
 
 
