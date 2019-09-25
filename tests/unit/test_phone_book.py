@@ -1,6 +1,6 @@
-from src.PhoneBook import PhoneBook
-from src.Contact import ContactEntry
-from src.DB import DB
+from phonebook.common.phonebook import PhoneBook
+from phonebook.common.contactentry import ContactEntry
+from phonebook.data.db import DB
 import pytest
 
 
@@ -28,7 +28,7 @@ def contact_entry():
 @pytest.mark.usefixtures("phone_book", "contact_entry")
 class TestPhoneBook(object):
     """
-    Test units for the PhoneBook class
+    Test unit for the common class
     """
 
     def test_setup_database(self) -> None:
@@ -51,7 +51,7 @@ class TestPhoneBook(object):
 
     def test_create_phone_book_class_instance(self, phone_book) -> None:
         """
-        test if a PhoneBook instance can be created
+        test if a common instance can be created
         :return:
         """
         _phone_book = phone_book
@@ -65,9 +65,27 @@ class TestPhoneBook(object):
         _contact_entry = contact_entry
         assert isinstance(_contact_entry, ContactEntry)
 
-    def test_add_entry_to_phone_book(self, phone_book, contact_entry) -> None:
+    def test_add_single_entry_to_phone_book(self, phone_book, contact_entry) -> None:
+        """
+
+        :param phone_book:
+        :param contact_entry:
+        :return:
+        """
         _result = phone_book.create(contact_entry)
         assert _result == 1
+
+    @pytest.mark.parametrize("surname, firstname, phone_number, address, expected", [
+
+        ("Aodhan", "Murray", "0831241244", "69 road nowhere", 2),
+        ("Michael", "Kenan", "0814423424", "6th Abbey road", 3),
+        ("Alan", "Turing", "0831834242", "44 St. Vincent's", 4)
+
+    ])
+    def test_add_many_entries_to_phone_book(self, surname, firstname, phone_number, address, expected, phone_book) -> None:
+        contact_entry = ContactEntry(surname, firstname, phone_number, address)
+        _result = phone_book.create(contact_entry)
+        assert _result == expected
 
     def test_find_entry_in_phone_book(self, phone_book) -> None:
         """
@@ -84,9 +102,9 @@ class TestPhoneBook(object):
         :param phone_book:
         :return:
         """
-        _result = phone_book.update(idx=1, firstname="Rufino")
-        _result = phone_book.find(1)
-        assert _result == (1, 'Vargas', 'Rufino', '08388764345', '12 court far, India')
+        # test single field update
+        _result = phone_book.update(idx=1, firstname="Humberto")
+        assert _result == 1
 
     def test_delete_entry_in_phone_book(self, phone_book) -> None:
         """
@@ -94,8 +112,12 @@ class TestPhoneBook(object):
         :param phone_book:
         :return:
         """
+        # test successful deletion
         _result = phone_book.delete("1")
         assert _result == 1
+        # test failed deletion
+        _result = phone_book.delete("1")
+        assert _result == 0
 
     def test_teardown_table(self) -> None:
         """drops table created for tests"""

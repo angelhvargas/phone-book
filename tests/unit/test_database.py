@@ -1,6 +1,6 @@
 import pytest
 
-from src.DB import DB
+from phonebook.data.db import DB
 
 
 @pytest.fixture

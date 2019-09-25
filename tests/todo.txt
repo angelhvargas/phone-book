@@ -17,12 +17,14 @@ X can list entries using the PhoneBook class
 X can delete entry from the PhoneBook class
 X can update an existing entry using the PhoneBook class
 - can search for entries using the PhoneBook class
-- can execute http request to create phone book entry
-- can execute http request to delete a phone book entry
-- can execute http request to update a phone book entry
-- can execute http requests to list phone book entries
+- can execute REST call to resource to create phone book entry
+- can execute REST call to resource to delete a phone book entry
+- can execute REST call to resource to update a phone book entry
+- can execute REST call to resource to list phone book entries
+- can execute REST call to search in the phone book list
 
 Functional
-- can CRUD the PhoneBook using the API interface
+- can follow a full CRUD the PhoneBook using the API interface (single entry)
+- can follow a full CRUD the PhoneBook using the API interface (multiples parametrized entries)
 
 
