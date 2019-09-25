@@ -16,7 +16,8 @@ X can create a new entry using the PhoneBook class
 X can list entries using the PhoneBook class
 X can delete entry from the PhoneBook class
 X can update an existing entry using the PhoneBook class
-- can search for entries using the PhoneBook class
+X can search for entries using the PhoneBook class
+X can create instance of PhoneBookService
 - can execute REST call to resource to create phone book entry
 - can execute REST call to resource to delete a phone book entry
 - can execute REST call to resource to update a phone book entry

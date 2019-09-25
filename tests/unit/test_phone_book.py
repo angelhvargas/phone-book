@@ -15,13 +15,20 @@ def database_path():
 
 @pytest.fixture()
 def phone_book(database_path):
-    """"""
+    """
+    PhoneBook instance
+    :param database_path: 
+    :return: 
+    """
     return PhoneBook(database_path)
 
 
 @pytest.fixture()
 def contact_entry():
-    """"""
+    """
+    ContactEntry DTO instance
+    :return: 
+    """
     return ContactEntry("Vargas", "Angel", "08388764345", "12 court far, India")
 
 
@@ -33,7 +40,7 @@ class TestPhoneBook(object):
 
     def test_setup_database(self) -> None:
         """
-        test phone_book table creation
+        test case: phone_book table creation
         :return:
         """
         database_connection = DB("test_database.sqlite3").connect()
@@ -51,7 +58,7 @@ class TestPhoneBook(object):
 
     def test_create_phone_book_class_instance(self, phone_book) -> None:
         """
-        test if a PhoneBook instance can be created
+        test case: PhoneBook instance can be created
         :return:
         """
         _phone_book = phone_book
@@ -59,7 +66,7 @@ class TestPhoneBook(object):
 
     def test_create_contact_dto_class_instance(self, contact_entry) -> None:
         """
-        test if a ContactEntry DTO can be instantiated
+        test case: ContactEntry DTO can be instantiated
         :param contact_entry: fixture
         :return:
         """
@@ -68,7 +75,7 @@ class TestPhoneBook(object):
 
     def test_add_single_entry_to_phone_book(self, phone_book, contact_entry) -> None:
         """
-
+        test case: add a single entry to phone book
         :param phone_book:
         :param contact_entry: fixture
         :return:
@@ -84,13 +91,23 @@ class TestPhoneBook(object):
 
     ])
     def test_add_many_entries_to_phone_book(self, surname, firstname, phone_number, address, expected, phone_book) -> None:
+        """
+        test case: add a multiple entries to phone book
+        :param surname: 
+        :param firstname: 
+        :param phone_number: 
+        :param address: 
+        :param expected: 
+        :param phone_book: 
+        :return: 
+        """
         contact_entry = ContactEntry(surname, firstname, phone_number, address)
         _result = phone_book.create(contact_entry)
         assert _result == expected
 
     def test_find_entry_in_phone_book(self, phone_book) -> None:
         """
-
+        test case: find a contact entry in the phone book by id
         :param phone_book:
         :return:
         """
@@ -99,7 +116,7 @@ class TestPhoneBook(object):
 
     def test_update_phone_book_entry(self, phone_book) -> None:
         """
-
+        test case: update a phone book entry
         :param phone_book: fixture
         :return:
         """
@@ -116,7 +133,7 @@ class TestPhoneBook(object):
     ])
     def test_search_phone_book_entry(self, surname, firstname, phone_number, address, expected, phone_book) -> None:
         """
-        test asserts correct search results using different search keys (columns)
+        test case: asserts correct search results using different search keys (columns)
         :param surname:
         :param firstname:
         :param phone_number:
@@ -159,7 +176,7 @@ class TestPhoneBook(object):
 
     def test_delete_entry_in_phone_book(self, phone_book) -> None:
         """
-
+        test case: delete an entry from the phone book
         :param phone_book:
         :return:
         """

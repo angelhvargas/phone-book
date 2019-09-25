@@ -51,8 +51,26 @@ Test Coverage:
 
 To run and view the test coverage:
 
-    run `pytest --cov=Database --cov=ContactEntry --cov=PhoneBook tests/`
+    run `pytest --cov=phonebook`
     
 once the process finish, open the directory created: `htmlcov`
 
 and open in your preferred browser `index.html` and inspect current test coverage
+
+Current coverage:
+
+```bash
+Name                               Stmts   Miss  Cover
+------------------------------------------------------
+phonebook\__init__.py                  0      0   100%
+phonebook\__main__.py                  0      0   100%
+phonebook\app.py                      12     12     0%
+phonebook\common\__init__.py           0      0   100%
+phonebook\common\contactentry.py      30      0   100%
+phonebook\common\phonebook.py         55      2    96%
+phonebook\data\__init__.py             0      0   100%
+phonebook\data\db.py                  32     10    69%
+------------------------------------------------------
+TOTAL                                129     24    81%
+
+```
