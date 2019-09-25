@@ -12,10 +12,10 @@ X can create instance of DB class
 X can create instance of ContactEntry DTO
 X can connect to the database
 X can write to the database
-- can create a new entry using the PhoneBook class
-- can list entries using the PhoneBook class
-- can delete entry from the PhoneBook class
-- can update an existing entry using the PhoneBook class
+X can create a new entry using the PhoneBook class
+X can list entries using the PhoneBook class
+X can delete entry from the PhoneBook class
+X can update an existing entry using the PhoneBook class
 - can search for entries using the PhoneBook class
 - can execute http request to create phone book entry
 - can execute http request to delete a phone book entry
