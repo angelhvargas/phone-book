@@ -49,8 +49,8 @@ class DB:
         """
         try:
             self.get_cursor().execute(query, params)
-        except sqlite3.Error as e:
-            self.logger.error(e)
+        except Exception as e:
+            self.logger.error("DB error: {}" % e)
 
         return self.get_cursor()
 
