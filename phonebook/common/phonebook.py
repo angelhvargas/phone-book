@@ -94,13 +94,30 @@ class PhoneBook:
         self.db.commit()
         return result.rowcount
 
-    def search(self, _term, _col=None) -> dict:
+    def search(self, **kwargs) -> dict:
         """
-        Search for an entry in the common
-        :param _term:
-        :param _col:
-        :return:
+        Search for an entry in the table phone_book
+        :param kwargs: [table columns]=value, can search by multiple columns, or a single column,
+        :return: collection
         """
+        cols = ""
+        values = ()
+        keys = ()
+        tup_idx = 0
+        for key, value in kwargs.items():
+            if cols != "":
+                cols += "and "
+            cols += "{0["+str(tup_idx)+"]} LIKE ? "
+            values = values + ("%"+value+"%",)
+            keys = keys + (key,)
+            tup_idx += 1
+
+        query = "SELECT * from phone_book WHERE " + cols
+        query = query.format(keys)
+        result = self.db.execute(query, values)
+
+        return result.fetchall()
+
 
 
 
