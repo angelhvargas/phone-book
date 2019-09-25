@@ -125,20 +125,37 @@ class TestPhoneBook(object):
         :param phone_book: fixture
         :return:
         """
-        # test search by surname
+        # test case: search by surname
         _result_surname = phone_book.search(surname=surname)
         assert _result_surname[0][1] == expected[0]
-        # test search by firstname
-        _result = phone_book.search(firstname=firstname)
-        assert _result_surname[0][2] == expected[1]
-        # test search by phone_number
-        _result = phone_book.search(phone_number=phone_number)
-        assert _result_surname[0][3] == expected[2]
-        # test search by address
-        _result = phone_book.search(address=address)
-        assert _result_surname[0][4] == expected[3]
-        # test search by name
 
+        # test case: search by firstname
+        _result_firstname = phone_book.search(firstname=firstname)
+        assert _result_surname[0][2] == expected[1]
+
+        # test case: search by phone_number
+        _result_phone_number = phone_book.search(phone_number=phone_number)
+        assert _result_phone_number[0][3] == expected[2]
+
+        # test case: search by address
+        _result_address = phone_book.search(address=address)
+        assert _result_address[0][4] == expected[3]
+
+        # test case: not found search by surname
+        _result_surname = phone_book.search(surname="Unknown")
+        assert _result_surname == []
+
+        # test case not found search
+        _result_firstname = phone_book.search(firstname="Unknown")
+        assert _result_firstname == []
+
+        # test case: not found search by phone_number
+        _result_phone_number = phone_book.search(phone_number="1231243")
+        assert _result_phone_number == []
+
+        # test case: not found search by address
+        _result_address = phone_book.search(phone_number="somewhere")
+        assert _result_address == []
 
     def test_delete_entry_in_phone_book(self, phone_book) -> None:
         """
