@@ -1,8 +1,14 @@
-.pytest_cache
+.pytest_cache/
 .idea
 .coverage
 *.txt
 *.sqlite3
 __pycache__
-htmlcov
-venv
+htmlcov/
+venv/
+*.pyc
+__pycache__/
+instance/
+dist/
+build/
+*.egg-info/
