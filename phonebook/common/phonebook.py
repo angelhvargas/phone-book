@@ -1,3 +1,4 @@
+import sqlite3
 from phonebook.data.db import DB
 from phonebook.common.contactentry import ContactEntry
 
@@ -10,10 +11,13 @@ class PhoneBook:
     """
     db = None
 
-    def __init__(self, db_path='test_database.sqlite3'):
+    def __init__(self, db_path='database.sqlite3'):
         """"""
-        database = DB(db_path).connect()
-        self.db = database
+        if isinstance(db_path, sqlite3.Connection):
+            self.db = db_path
+        else:
+            database = DB(db_path).connect()
+            self.db = database
 
     def create(self, contact_entry: ContactEntry) -> int:
         """
