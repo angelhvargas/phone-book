@@ -1,16 +1,18 @@
 import pytest
 import phonebook
+from phonebook.config import TestingConfig
 
 
 @pytest.fixture()
 def app():
-    return phonebook.create_app()
+    """prepare application and pass configuration for testing environment"""
+    return phonebook.create_app(TestingConfig)
 
 
 @pytest.fixture()
 def client(app):
     """
-    Prepare an instance of the application
+    Prepare a client instance of the application, for resource testing
     :return: None
     """
     app.testing = True
@@ -20,4 +22,5 @@ def client(app):
 
 @pytest.fixture()
 def runner(app):
+    """Test runner"""
     return app.test_client()
