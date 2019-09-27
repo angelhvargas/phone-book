@@ -1,34 +1,38 @@
-import os
+from phonebook.config import *
+from phonebook import (
+    common
+)
 from flask import (
     Flask, request, jsonify
 )
 
+import os
 
-def create_app(test_config=None):
+
+def create_app(config_class=DevelopmentConfig):
     app = Flask(__name__, instance_path=os.path.dirname(__file__))
-    app.config.from_mapping(
+
+    if config_class is None:
+        app.config.from_mapping(
             SECRET_KEY='1234567890987654321',
             DATABASE=os.path.join(app.instance_path, 'database.sqlite3'),
-    )
-
-    if test_config is None:
+        )
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile('config.py', silent=True)
     else:
         # load the test config if passed in
-        app.config.from_mapping(test_config)
+        app.config.from_object(config_class)
 
-    # ensure the instance folder exists
+    # ensure the app instance folder exists
     try:
         os.makedirs(app.instance_path)
-    except OSError:
+    except OSError as e:
         pass
 
-    # load states allowed for the robots
-
-    from .data import db
+    from . import db
     # register db initiator
-    db.init_app(app)
+    with app.app_context():
+        db.init_app(app)
 
     from . import phone_book_api
 

@@ -1,5 +1,5 @@
 import sqlite3
-from phonebook.data.db import DB
+from phonebook.db.DB import DB
 from phonebook.common.contactentry import ContactEntry
 
 
