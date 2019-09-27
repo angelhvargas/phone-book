@@ -19,12 +19,11 @@ X can update an existing entry using the PhoneBook class
 X can search for entries using the PhoneBook class
 X can create instance of PhoneBookService
 X created base schema file
-
-- create Flask framework test foundation
--
-- create Flask application/service for PhoneBook
-- test Flask database setup
-- add test units for Flash application
+X create Flask framework test foundation
+X create Flask application/service for PhoneBook
+X test Flask database setup
+X add test units for Flash application foundations
+X Mock resource request
 - can execute REST call to resource to create phone book entry
 - can execute REST call to resource to delete a phone book entry
 - can execute REST call to resource to update a phone book entry
