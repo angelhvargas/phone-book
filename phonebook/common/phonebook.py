@@ -40,10 +40,24 @@ class PhoneBook:
         self.db.commit()
         return result.lastrowid
 
+    def all(self, _by='id', _order='DESC') -> dict:
+        """
+        Return all the entries in the phone_book
+        :param _by: column to order
+        :param _order:
+        :return:
+        """
+
+        query = '''SELECT * FROM phone_book ORDER BY {} {}'''
+        query = query.format(_by, _order)
+
+        result = self.db.execute(query)
+        return result.fetchall()
+
     def find(self, _id) -> dict:
         """
         Find an entry in the Phone Book based on their id
-        :param _id:
+        :param _id: contact unique id
         :return: return a dict with the data queried from the database
         """
         query = ('''SELECT * FROM phone_book
