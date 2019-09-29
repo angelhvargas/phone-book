@@ -1,6 +1,6 @@
 import pytest
 
-from phonebook.data.db import DB
+from phonebook.db.DB import DB
 
 
 @pytest.fixture
@@ -12,7 +12,7 @@ def database_path():
     return "test_database.sqlite3"
 
 
-@pytest.fixture
+@pytest.fixture(scope="class")
 def database_connection():
     """
     database connection

@@ -1,8 +1,7 @@
 import sqlite3
 import click
-from flask import current_app, g
+from flask import current_app, g, Flask
 from flask.cli import with_appcontext
-from .DB import DB
 
 
 def get_db() -> sqlite3.Connection:
@@ -11,7 +10,10 @@ def get_db() -> sqlite3.Connection:
     :return: sqlite3.Connection
     """
     if 'db' not in g:
-        g.db = DB(current_app.config['DATABASE']) .connect()
+        g.db = sqlite3.connect(
+            current_app.config['DATABASE'],
+            detect_types=sqlite3.PARSE_DECLTYPES
+        )
         g.db.row_factory = sqlite3.Row
 
     return g.db
@@ -50,7 +52,7 @@ def init_db_command():
     click.echo('Initialized the database.')
 
 
-def init_app(app):
+def init_app(app: Flask):
     """
     tells Flask to call that function when cleaning up after returning the response.
     also adds a new command that can be called with the flask command.

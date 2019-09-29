@@ -1,6 +1,6 @@
 from phonebook.common.phonebook import PhoneBook
 from phonebook.common.contactentry import ContactEntry
-from phonebook.data.db import DB
+from phonebook.db.DB import DB
 import pytest
 
 
@@ -104,6 +104,15 @@ class TestPhoneBook(object):
         contact_entry = ContactEntry(surname, firstname, phone_number, address)
         _result = phone_book.create(contact_entry)
         assert _result == expected
+
+    def test_get_all_entries_in_phone_book(self, phone_book) -> None:
+        """
+
+        :param phone_book:
+        :return:
+        """
+        _results = phone_book.all()
+        assert len(_results) == 4
 
     def test_find_entry_in_phone_book(self, phone_book) -> None:
         """
