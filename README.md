@@ -1,21 +1,26 @@
 phone-book
 --------------
-Author: Angel Vargas
 
-Usage
------
+_Description:_ 
 
-Run from your console:
- 
-``
+This is a simple phone book rest api and a linux console client which support the following actions:
 
-where: 
-    
-    
+- List all entries in the phone book.
+- Create a new entry to the phone book.
+- Remove an existing entry in the phone book.
+- Update an existing entry in the phone book.
+- Search for entries in the phone book by surname.
+
+Contacts can store the following information:
+- Surname
+- Firstname
+- Phone number
+- Address (optional)
+
 
 Requirements:
 -------------
-1. Python 3.7
+1. Python 3.6.x
 
 Install:
 --------
@@ -37,7 +42,49 @@ Install:
 4. Install dependencies
  
     `pip install -r requirements.txt`
-    
+
+
+Launch Application
+------------------
+###### 1.1 set environment Windows base system:
+
+`set FLASK_APP=phonebook`
+
+`set FLASK_ENV=development`
+
+###### 1.2 set environment Windows base system:
+
+`export FLASK_APP=phonebook`
+
+`export FLASK_ENV=development`
+
+###### 2. run server
+
+from the base directory execute:
+
+`flask run`
+
+
+Client usage
+------------
+
+The client needs the server running to get it connected to the Phone Book service.
+
+Run from your console:
+ 
+`phonebook.py --help`
+
+#### some usage examples:
+
+`phonebook.py --list-all `
+
+`phonebook.py --find [args] `
+
+`phonebook.py --create [args] `
+
+`phonebook.py --delete [args] `
+
+`phonebook.py --search [args]`  
 
 Testing:
 --------
@@ -57,20 +104,26 @@ once the process finish, open the directory created: `htmlcov`
 
 and open in your preferred browser `index.html` and inspect current test coverage
 
-Current coverage:
+Current test coverage:
 
 ```bash
+----------- coverage: platform win32, python 3.6.7-final-0 -----------
 Name                               Stmts   Miss  Cover
 ------------------------------------------------------
-phonebook\__init__.py                  0      0   100%
-phonebook\__main__.py                  0      0   100%
-phonebook\app.py                      12     12     0%
+phonebook\__init__.py                 28     23    18%
 phonebook\common\__init__.py           0      0   100%
 phonebook\common\contactentry.py      30      0   100%
-phonebook\common\phonebook.py         55      2    96%
-phonebook\data\__init__.py             0      0   100%
-phonebook\data\db.py                  32     10    69%
+phonebook\common\phonebook.py         63      2    97%
+phonebook\config.py                   30      5    83%
+phonebook\db\DB.py                    32     10    69%
+phonebook\db\__init__.py              24      5    79%
+phonebook\phone_book_api.py           40      8    80%
 ------------------------------------------------------
-TOTAL                                129     24    81%
+TOTAL                                247     53    79%
+
 
 ```
+
+Work on progress, no releases yet.
+
+Author: Angel Vargas
