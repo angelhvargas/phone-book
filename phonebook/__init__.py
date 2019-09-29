@@ -3,7 +3,7 @@ from phonebook import (
     common
 )
 from flask import (
-    Flask, request, jsonify
+    Flask, request, jsonify, g
 )
 
 import os
@@ -29,10 +29,9 @@ def create_app(config_class=DevelopmentConfig):
     except OSError as e:
         pass
 
-    from . import db
     # register db initiator
-    with app.app_context():
-        db.init_app(app)
+    from . import db
+    db.init_app(app)
 
     from . import phone_book_api
 
