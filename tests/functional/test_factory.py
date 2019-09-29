@@ -10,7 +10,7 @@ class TestFactory:
     """
     def test_request_context(self, app):
         """
-        Testing flask application in context mode.
+        does test the flask application in context mode.
         :param app:
         :return:
         """

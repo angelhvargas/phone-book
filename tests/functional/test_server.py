@@ -22,3 +22,23 @@ class TestServer:
                 '"19-56 R block"], [2, "Stroustrup", "Bjarne", "3581321345589", "19-79 C block"], [1, "Ritchie", '
                 '"Dennis", "1235813213455", "19-41 C block"]]'
             )
+
+    @pytest.mark.parametrize("_id,expected", [
+        ("3", '[3, "Noam", "Chomsky", "3581321345589", "19-56 R block"]'),
+        ("2", '[2, "Stroustrup", "Bjarne", "3581321345589", "19-79 C block"]'),
+        ("1", '[1, "Ritchie", "Dennis", "1235813213455", "19-41 C block"]')
+
+    ])
+    def test_find_a_contact(self, _id, expected, client: flask.Flask) -> None:
+        """
+        Test resource GET -> /contact/[id] ¬ returns -> JSON object with a matching contact found in the phone book
+        :param client:
+        :return:
+        """
+
+        with client as c:
+            resp = c.get('/contact/{}'.format(_id))
+            data = flask.json.loads(resp.data)
+            assert data == flask.json.loads(
+                expected
+            )
