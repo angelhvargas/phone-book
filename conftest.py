@@ -8,33 +8,43 @@ from flask import (
     Flask
 )
 import phonebook
+from phonebook import db
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 
-@pytest.fixture()
+@pytest.yield_fixture()
 def app():
-    """prepare application and pass configuration for testing environment"""
-    app = Flask(__name__, instance_path=os.path.dirname(__file__))
-    # load the test config if passed in
-    app.config.from_object(phonebook.config.TestingConfig)
 
-    # ensure the app instance folder exists
-    try:
-        os.makedirs(app.instance_path)
-    except OSError as e:
-        pass
+    def _app():
+        """prepare application and pass configuration for testing environment"""
+        app = Flask(__name__, instance_path=os.path.join(os.path.abspath(basedir), 'phonebook', ''))
+        app.test_request_context().push()
+        # load the test config if passed in
+        app.config.from_object(phonebook.config.TestingConfig)
 
-    # register db initiator
-    with app.app_context():
-        from phonebook import db
-        db.init_app(app)
-        app.db = db.get_db()
+        # ensure the app instance folder exists
+        try:
+            os.makedirs(app.instance_path)
+        except OSError as e:
+            pass
 
-    import phonebook.phone_book_api as phone_book_api
+        # register db initiator
+        with app.app_context():
+            from phonebook import db
+            db.destroy_all()
+            db.init_db()
+            db.init_app(app)
+            app.db = db.get_db()
 
-    # register server control blueprint
-    app.register_blueprint(phone_book_api.bp, url_prefix='/')
+        import phonebook.phone_book_api as phone_book_api
 
-    return app
+        # register server control blueprint
+        app.register_blueprint(phone_book_api.bp, url_prefix='/')
+
+        return app
+    yield _app()
+    # destroy database after tests (teardown)
+    db.destroy_all()
 
 
 @pytest.fixture()

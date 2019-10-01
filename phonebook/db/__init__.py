@@ -42,9 +42,16 @@ def init_db() -> None:
         db.executescript(f.read().decode('utf8'))
 
 
+def destroy_all() -> None:
+    """"""
+    db = get_db()
+    with current_app.open_resource('destroy_db.sql') as f:
+        db.executescript(f.read().decode('utf8'))
+
+
 @click.command('init-db')
 @with_appcontext
-def init_db_command():
+def init_db_command() -> None:
     """init_db command
     - should be run from the console, #$ flash init-db
     This command clear the existing data and create new tables and populates with test data"""
@@ -52,7 +59,7 @@ def init_db_command():
     click.echo('Initialized the database.')
 
 
-def init_app(app: Flask):
+def init_app(app: Flask) -> None:
     """
     tells Flask to call that function when cleaning up after returning the response.
     also adds a new command that can be called with the flask command.
