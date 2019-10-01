@@ -24,10 +24,10 @@ X create Flask application/service for PhoneBook
 X test Flask database setup
 X add test units for Flash application foundations
 X Mock resource request
-- can execute REST call to resource to create phone book entry
+X can execute REST call to resource to create phone book entry
 - can execute REST call to resource to delete a phone book entry
 - can execute REST call to resource to update a phone book entry
-- can execute REST call to resource to list phone book entries
+X can execute REST call to resource to list phone book entries
 - can execute REST call to search in the phone book list
 
 Functional
