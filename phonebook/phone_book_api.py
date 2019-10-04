@@ -4,6 +4,7 @@ from flask import (
 import json
 from phonebook.common.phonebook import PhoneBook
 from phonebook.common.contactentry import ContactEntry
+from phonebook.support import valid_contact
 from phonebook.db import get_db
 
 bp = Blueprint('phone_book_api', __name__)
@@ -68,12 +69,12 @@ def contacts_resource() -> Flask.make_response:
                 return api_response(data, 200)
 
         except RuntimeError as e:
-            return api_response({"error": e}, 400)
+            return api_response({"error": e}, 500)
     else:
-        return abort(400, {'message': 'Invalid request'})
+        return abort(405, {'message': 'Invalid request'})
 
 
-@bp.route('contacts/<string:contact_id>', methods=("GET", "DELETE"))
+@bp.route('contacts/<string:contact_id>', methods=("GET", "PUT", "DELETE"))
 def contact(contact_id=-1) -> Flask.make_response:
     """
     >> resource GET 'contacts/<contact_id>' Returns a contact if the parameter id is included
@@ -93,7 +94,15 @@ def contact(contact_id=-1) -> Flask.make_response:
         return api_response(list(_data), 200)
 
     elif request.method == "PUT":
-        pass
+        db = get_db()
+        pb = PhoneBook(db)
+
+        try:
+            _data = pb.update(**request.args)
+            return api_response(_data, 200)
+        except db.Error as e:
+            return api_response({'error': e}, 500)
+
     elif request.method == "DELETE":
         #
         db = get_db()
@@ -104,6 +113,8 @@ def contact(contact_id=-1) -> Flask.make_response:
             return api_response({'error': e}, 500)
 
         return api_response(_data, 200)
+    else:
+        return abort(405, {'message': 'method not allowed'})
 
 
 @bp.route('<path:path>', methods=('GET', 'POST', 'PUT', 'DELETE',))
@@ -113,7 +124,7 @@ def missing_request(path):
     :param path:
     :return:
     """
-    return abort(400, {'message': 'Invalid request'})
+    return abort(405, {'message': 'Invalid request'})
 
 
 def api_response(data_, status_):
@@ -130,18 +141,3 @@ def api_response(data_, status_):
     )
     return response_
 
-
-def valid_contact(surname: str, firstname: str, phone_number: str, address=None) -> ContactEntry:
-    """
-
-    :param surname:
-    :param firstname:
-    :param phone_number:
-    :param address:
-    :return:
-    """
-    try:
-        contact_entry = ContactEntry(surname, firstname, phone_number, address)
-    except Exception as e:
-        return abort(400, "invalid ContactEntry object: {}".format(e))
-    return contact_entry
