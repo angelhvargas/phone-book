@@ -3,7 +3,7 @@ from phonebook import (
     common
 )
 from flask import (
-    Flask, request, jsonify, g
+    Flask, request, jsonify
 )
 
 import os
