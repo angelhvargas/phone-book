@@ -1,8 +1,9 @@
 from flask import (
-    Blueprint, current_app as app, Flask, abort, g
+    Blueprint, current_app as app, Flask, abort, request
 )
 import json
 from phonebook.common.phonebook import PhoneBook
+from phonebook.common.contactentry import ContactEntry
 from phonebook.db import get_db
 
 bp = Blueprint('phone_book_api', __name__)
@@ -10,68 +11,99 @@ bp = Blueprint('phone_book_api', __name__)
 
 @bp.route('/', methods=('GET',))
 def home():
-    _data = {"message": "phone book rest api, for api instructions navigate to: "}
+    _data = dict(message="phone book rest api, for api instructions navigate to: ")
     return api_response(_data, 200)
 
 
-@bp.route('contact/all', methods=('GET',))
-def get_contact_all() -> Flask.make_response:
+@bp.route('contacts', methods=('GET', 'POST'))
+def contacts_resource() -> Flask.make_response:
     """
-    Return all the contacts in the
-    method: GET
-    resource: /contact/all
-    :return: JSON object |
-    {id: _id, surname: _surname, firstname: _firstname, phone_number: _phone_number, address: _address}
+    >> resource GET '/contacts' return a list of all contacts
+    >> resource GET '/contacts?attribute=search' return the contacts matching the given search
+    >> resource POST '/contacts?surname=<surname>&firstname=<firstname>&phone_number=32234234&address=fadsf' creates a
+    new entry in the phonebook.
+    This resource requires the following parameters to create a new entry:
+        surname: str
+        firstname: str
+        phone_number: str
+        address: str (Optional)
+    :return: response 200: if resource does created a new entry in the phone book
     """
-    db = get_db()
-    pb = PhoneBook(db)
-    try:
-        _data = pb.all()
 
-        data = list()
+    if request.method == 'GET':
+        db = get_db()
+        pb = PhoneBook(db)
+        qs = request.args
+        try:
+            if qs:
+                rows = pb.search(**qs)
+            else:
+                rows = pb.all()
+            data = list()
 
-        for row in _data:
-            data.append(list(row))
+            for row in rows:
+                data.append(list(row))
 
-    except db.Error as e:
-        return api_response({'error': e}, 500)
+        except db.Error as e:
+            return api_response({'error': e}, 500)
 
-    return api_response(data, 200)
+        return api_response(data, 200)
+
+    elif request.method == 'POST':
+        db = get_db()
+        pb = PhoneBook(db)
+        try:
+            contact_entry = valid_contact(surname=request.form['surname'], firstname=request.form['firstname'],
+                                          phone_number=request.form['phone_number'], address=request.form['address'])
+            if isinstance(contact_entry, ContactEntry):
+                contact_entry_id = pb.create(contact_entry)
+                data = {
+                    "id": contact_entry_id,
+                    "surname": contact_entry.surname,
+                    "firstname": contact_entry.firstname,
+                    "phone_number": contact_entry.phone_number,
+                    "address": contact_entry.address
+                }
+
+                return api_response(data, 200)
+
+        except RuntimeError as e:
+            return api_response({"error": e}, 400)
+    else:
+        return abort(400, {'message': 'Invalid request'})
 
 
-@bp.route('contact', methods=("GET",))
-@bp.route('contact/<string:contact_id>', methods=("GET",))
-def get_contact(contact_id=-1) -> Flask.make_response:
+@bp.route('contacts/<string:contact_id>', methods=("GET", "DELETE"))
+def contact(contact_id=-1) -> Flask.make_response:
     """
+    >> resource GET 'contacts/<contact_id>' Returns a contact if the parameter id is included
+    and is valid or is found in the database.
+    >> resource DELETE 'contacts/<contact_id>' Deletes the given contact if the id exists in the phone book
     :param contact_id: valid integer id to match for search
     :return:
     """
-    if contact_id == -1:
-        get_contact_all()
+    if request.method == "GET":
+        db = get_db()
+        pb = PhoneBook(db)
+        try:
+            _data = pb.find(contact_id)
+        except db.Error as e:
+            return api_response({'error': e}, 500)
 
-    db = get_db()
-    pb = PhoneBook(db)
-    try:
-        _data = pb.find(contact_id)
-    except db.Error as e:
-        return api_response({'error': e}, 500)
+        return api_response(list(_data), 200)
 
-    return api_response(list(_data), 200)
+    elif request.method == "PUT":
+        pass
+    elif request.method == "DELETE":
+        #
+        db = get_db()
+        pb = PhoneBook(db)
+        try:
+            _data = pb.delete(contact_id)
+        except db.Error as e:
+            return api_response({'error': e}, 500)
 
-
-@bp.route('contact/search/<string:contact_id>', methods=("GET",))
-@bp.route('contact/<string:contact_id>/<string:attribute>', methods=("GET",))
-def search_contact(search: str, attribute=None) -> Flask.make_response:
-    """
-
-    returns contact matching exactly a given value in a given attribute,
-    by default this resource will use the contact
-    id, this means is different than the search resource.
-
-    :param search:
-    :param attribute:
-    :return:
-    """
+        return api_response(_data, 200)
 
 
 @bp.route('<path:path>', methods=('GET', 'POST', 'PUT', 'DELETE',))
@@ -81,7 +113,7 @@ def missing_request(path):
     :param path:
     :return:
     """
-    abort(400, {'message': 'Invalid request'})
+    return abort(400, {'message': 'Invalid request'})
 
 
 def api_response(data_, status_):
@@ -97,3 +129,19 @@ def api_response(data_, status_):
         mimetype='application/json'
     )
     return response_
+
+
+def valid_contact(surname: str, firstname: str, phone_number: str, address=None) -> ContactEntry:
+    """
+
+    :param surname:
+    :param firstname:
+    :param phone_number:
+    :param address:
+    :return:
+    """
+    try:
+        contact_entry = ContactEntry(surname, firstname, phone_number, address)
+    except Exception as e:
+        return abort(400, "invalid ContactEntry object: {}".format(e))
+    return contact_entry

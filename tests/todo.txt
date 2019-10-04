@@ -1,9 +1,9 @@
 Acceptance criteria:
-- List all entries in the phone book.
-- Create a new entry to the phone book.
-- Remove an existing entry in the phone book.
+X List all entries in the phone book.
+X Create a new entry to the phone book.
+X Remove an existing entry in the phone book.
 - Update an existing entry in the phone book.
-- Search for entries in the phone book by surname.
+X Search for entries in the phone book by surname.
 
 Test cases
 
@@ -25,10 +25,10 @@ X test Flask database setup
 X add test units for Flash application foundations
 X Mock resource request
 X can execute REST call to resource to create phone book entry
-- can execute REST call to resource to delete a phone book entry
+X can execute REST call to resource to delete a phone book entry
 - can execute REST call to resource to update a phone book entry
 X can execute REST call to resource to list phone book entries
-- can execute REST call to search in the phone book list
+X can execute REST call to search in the phone book list
 
 Functional
 - can follow a full CRUD the PhoneBook using the API interface (single entry)

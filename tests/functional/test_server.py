@@ -52,7 +52,7 @@ class TestServer:
     ])
     def test_get_contact_by_id(self, _id, expected, client: flask.Flask) -> None:
         """
-        Test resource GET -> /contact/[id] ¬ returns -> JSON object with a matching contact found in the phone book
+        Test resource GET -> /contacts/[id] ¬ returns -> JSON object with a matching contact found in the phone book
         :param _id:
         :param expected:
         :param client:
@@ -65,3 +65,43 @@ class TestServer:
             assert data == flask.json.loads(
                 expected
             )
+
+    @pytest.mark.parametrize("_id,expected", [
+        ("5", "0"),
+        ("4", '1'),
+        ("44", '0')
+
+    ])
+    def test_delete_contact_by_id(self, _id, expected, client: flask.Flask) -> None:
+        """
+        Test resource GET -> /contacts/[id] ¬ returns -> JSON object with a matching contact found in the phone book
+        :param _id:
+        :param expected:
+        :param client:
+        :return:
+        """
+
+        with client as c:
+            resp = c.delete('/contacts/{}'.format(_id))
+            data = flask.json.loads(resp.data)
+            assert data == flask.json.loads(
+                expected
+            )
+
+    @pytest.mark.parametrize("attr, search, expected", [('surname','Stroustrup', '[[2, "Stroustrup", "Bjarne", '
+                                                                                '"3581321345589", "19-79 C block"]]')])
+    def test_search_contact_by_attribute(self, attr, search, expected, client: flask.Flask) -> None:
+        """
+        Test resource GET ->/contacts?attr=search
+        :param attr:
+        :param search:
+        :param expected:
+        :param client:
+        :return:
+        """
+        _data = {attr: search}
+        with client as c:
+            resp = c.get('/contacts', query_string=_data)
+            data = flask.json.loads(resp.data)
+            assert data == flask.json.loads(expected)
+

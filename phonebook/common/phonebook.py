@@ -97,15 +97,15 @@ class PhoneBook:
 
     def delete(self, _id) -> int:
         """
-        Find an entry in the Phone Book based on their id and delete it
+        Find an entry in the Phone Book based on their id and deletes it
         :param _id:
-        :return: number of entries deleted
+        :return: 1 if succeeded
         """
         query = ('''DELETE FROM phone_book
         WHERE id=?''')
 
         value = (
-            str(_id)
+            str(_id),
         )
 
         result = self.db.execute(query, value)
