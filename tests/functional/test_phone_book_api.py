@@ -11,7 +11,7 @@ class TestServer:
     def test_get_all_contacts(self, client: flask.Flask) -> None:
         """
         Test resource GET -> /contacts ¬ returns -> JSON object with all the contacts in the phone book
-        :param client:
+        :param client: Flask framework instance
         :return:
         """
         with client as c:
@@ -29,13 +29,13 @@ class TestServer:
                                '"phone_number": "27364523", "surname": "Vargas"}')])
     def test_create_new_contact(self, surname, firstname, phone_number, address, expected, client: flask.Flask) -> None:
         """
-        Test resource POST:/contacts does create a new entry in the phonebook
-        :param surname:
-        :param firstname:
-        :param phone_number:
-        :param address:
-        :param expected:
-        :param client:
+        Test resource POST -> /contacts does create a new entry in the phonebook
+        :param surname: contact entry attribute
+        :param firstname: contact entry attribute
+        :param phone_number: contact entry attribute
+        :param address: contact entry attribute
+        :param expected: assert test expected value
+        :param client: Flask framework instance
         :return:
         """
         with client as c:
@@ -52,10 +52,10 @@ class TestServer:
     ])
     def test_get_contact_by_id(self, _id, expected, client: flask.Flask) -> None:
         """
-        Test resource GET -> /contacts/[id] ¬ returns -> JSON object with a matching contact found in the phone book
+        Test resource GET -> /contacts/[id]
         :param _id:
-        :param expected:
-        :param client:
+        :param expected: assert test expected value
+        :param client: Flask framework instance
         :return:
         """
 
@@ -74,10 +74,10 @@ class TestServer:
     ])
     def test_delete_contact_by_id(self, _id, expected, client: flask.Flask) -> None:
         """
-        Test resource GET -> /contacts/[id] ¬ returns -> JSON object with a matching contact found in the phone book
-        :param _id:
-        :param expected:
-        :param client:
+        Test resource DELETE -> /contacts/[id]
+        :param _id: contact id (database)
+        :param expected: assert test expected value
+        :param client: Flask framework instance
         :return:
         """
 
@@ -88,15 +88,16 @@ class TestServer:
                 expected
             )
 
-    @pytest.mark.parametrize("attr, search, expected", [('surname','Stroustrup', '[[2, "Stroustrup", "Bjarne", '
-                                                                                '"3581321345589", "19-79 C block"]]')])
+    @pytest.mark.parametrize("attr, search, expected", [
+        ('surname','Stroustrup', '[[2, "Stroustrup", "Bjarne", "3581321345589", "19-79 C block"]]')])
     def test_search_contact_by_attribute(self, attr, search, expected, client: flask.Flask) -> None:
         """
         Test resource GET ->/contacts?attr=search
+        this unit test  applies to a search using the phone entries attributes (contacts).
         :param attr:
         :param search:
-        :param expected:
-        :param client:
+        :param expected: assert test expected value
+        :param client: Flask framework instance
         :return:
         """
         _data = {attr: search}
@@ -104,4 +105,29 @@ class TestServer:
             resp = c.get('/contacts', query_string=_data)
             data = flask.json.loads(resp.data)
             assert data == flask.json.loads(expected)
+
+    @pytest.mark.parametrize(
+        "_id, attr, value, expected", [
+            ('2', 'phone_number', '35813213455', 1),
+            ('3', 'surname', 'Schumacher', 1),
+            ('14', 'phone_number', '35813213455', 0)])
+    def test_update_contact(self, _id, attr, value, expected, client: flask.Flask) -> None:
+        """
+        Test resource PUT ->/contacts/[id]?attr=new_value
+        :param _id: contact id (database)
+        :param attr: ContactEntry valid attribute
+        :param value: new value for given attribute.
+        :param expected: assert test expected value
+        :param client: Flask framework instance
+        :return:
+        """
+        _data = {
+            "idx": _id,
+            attr: value
+        }
+
+        with client as c:
+            resp = c.put('/contacts/{}'.format(_id), query_string=_data)
+            data = flask.json.loads(resp.data)
+            assert data == expected
 
