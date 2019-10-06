@@ -107,19 +107,20 @@ and open in your preferred browser `index.html` and inspect current test coverag
 Current test coverage:
 
 ```bash
------------ coverage: platform win32, python 3.6.7-final-0 -----------
 Name                               Stmts   Miss  Cover
 ------------------------------------------------------
 phonebook\__init__.py                 28     23    18%
 phonebook\common\__init__.py           0      0   100%
 phonebook\common\contactentry.py      30      0   100%
 phonebook\common\phonebook.py         63      2    97%
-phonebook\config.py                   30      5    83%
+phonebook\config.py                   28      5    82%
 phonebook\db\DB.py                    32     10    69%
-phonebook\db\__init__.py              24      5    79%
-phonebook\phone_book_api.py           40      8    80%
+phonebook\db\__init__.py              29      2    93%
+phonebook\phone_book_api.py           70     15    79%
+phonebook\support.py                   8      2    75%
 ------------------------------------------------------
-TOTAL                                247     53    79%
+TOTAL                                288     59    80%
+
 
 
 ```
