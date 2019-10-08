@@ -89,7 +89,7 @@ def contact(contact_id=-1) -> Flask.make_response:
         try:
             _data = pb.find(contact_id)
         except db.Error as e:
-            return api_response({'error': e}, 500)
+            return api_response({'error': e}, 403)
 
         return api_response(list(_data), 200)
 
@@ -98,7 +98,7 @@ def contact(contact_id=-1) -> Flask.make_response:
         pb = PhoneBook(db)
 
         try:
-            _data = pb.update(**request.args)
+            _data = pb.update(contact_id, **request.args)
             return api_response(_data, 200)
         except db.Error as e:
             return api_response({'error': e}, 500)
