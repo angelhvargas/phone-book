@@ -63,12 +63,16 @@ class PhoneBook:
         query = ('''SELECT * FROM phone_book
         WHERE id=?''')
 
-        value = (
+        value = [
             str(_id)
-        )
-
-        result = self.db.execute(query, value)
-        return result.fetchone()
+        ]
+        results = dict()
+        stmt = self.db.execute(query, value)
+        if stmt.arraysize > 0:
+            results = stmt.fetchone()
+            return results
+        else:
+            return results
 
     def update(self, _id, **kwargs) -> int:
         """

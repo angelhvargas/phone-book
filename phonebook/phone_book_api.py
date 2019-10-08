@@ -91,7 +91,10 @@ def contact(contact_id=-1) -> Flask.make_response:
         except db.Error as e:
             return api_response({'error': e}, 403)
 
-        return api_response(list(_data), 200)
+        if bool(_data):
+            return api_response(list(_data), 200)
+        else:
+            return api_response({"message": "not found"}, 203)
 
     elif request.method == "PUT":
         db = get_db()
