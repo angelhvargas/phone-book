@@ -84,7 +84,9 @@ Run from your console:
 
 #### some usage examples:
 
-```usage: python3 -m phone_book.py [-h] [--surname [SURNAME]]
+```
+
+usage: python3 -m phone_book.py [-h] [--surname [SURNAME]]
                                 [--first-name [FIRST_NAME]]
                                 [--phone-number [PHONE_NUMBER]]
                                 [--address [ADDRESS]] [--id [ID]] [-l [LIST] |
@@ -114,7 +116,8 @@ optional arguments:
   -d [DELETE], --delete [DELETE]
                         deletes an entry in the phone book
   -s [SEARCH], --search [SEARCH]
-                        search for an entry in the phonebook```
+                        search for an entry in the phonebook
+```
 
 
 Testing:
@@ -137,7 +140,8 @@ and open in your preferred browser `index.html` and inspect current test coverag
 
 Current test coverage:
 
-```bash
+```
+
 ----------- coverage: platform win32, python 3.6.7-final-0 -----------
 Name                               Stmts   Miss  Cover
 ------------------------------------------------------
