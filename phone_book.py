@@ -174,7 +174,6 @@ def _main() -> None:
                            nargs='?', const=True, type=bool)
     opt_group.add_argument('-s', '--search', help="search for an entry in the phonebook",
                            nargs='?', const=True, type=bool)
-    opt_group.add_argument('-p', '--prettify', help="", nargs='?', const=True, type=bool)
 
     args = arg_parser.parse_args()
 
