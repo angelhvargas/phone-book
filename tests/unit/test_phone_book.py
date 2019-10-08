@@ -130,7 +130,7 @@ class TestPhoneBook(object):
         :return:
         """
         # test single field update
-        _result = phone_book.update(idx=1, firstname="Humberto")
+        _result = phone_book.update(1, firstname="Humberto")
         assert _result == 1
 
     @pytest.mark.parametrize("surname, firstname, phone_number, address, expected", [

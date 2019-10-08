@@ -122,7 +122,6 @@ class TestServer:
         :return:
         """
         _data = {
-            "idx": _id,
             attr: value
         }
 

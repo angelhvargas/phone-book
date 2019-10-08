@@ -70,22 +70,19 @@ class PhoneBook:
         result = self.db.execute(query, value)
         return result.fetchone()
 
-    def update(self, **kwargs) -> int:
+    def update(self, _id, **kwargs) -> int:
         """
         Update phone book entry
         :param kwargs:
         :return: number of entries updated
         """
         cols = ""
-        idx = kwargs.pop('idx')
         values = ()
         for key, value in kwargs.items():
-            if key == 'idx':
-                continue
             cols += key+"=? "
             values = values + (value,)
 
-        values = values + (str(idx),)
+        values = values + (str(_id),)
 
         query = "UPDATE phone_book SET " + cols + " WHERE id=?"
 

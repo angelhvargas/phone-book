@@ -67,9 +67,14 @@ def get_contact():
     pass
 
 
-def update_contact():
+def update_contact(_id: str, data: dict) -> None:
     """todo"""
-    pass
+    try:
+        response = requests.put(SERVER_BASE + '/contacts/{}'.format(_id), data=data)
+        if response.status_code == 200:
+            print('The contact id: {} has been update'.format(_id))
+    except requests.HTTPError as e:
+        print('An error happened: ' + e.strerror)
 
 
 def delete_contact(contact_id: str) -> None:
@@ -137,15 +142,30 @@ def _main() -> None:
 
     elif args.update:
         # update contact
+        if not args.id:
+            arg_parser.error('A contact id is required --id [id]')
         if not args.surname and not args.first_name and not args.phone_number and not args.address:
             arg_parser.error('at least one attribute is required: [--surname] '
                              'or [--first-name] or [--phone-number] or [--address]')
-        pass
+
+        _data = {}
+        _id = args.id
+
+        if args.surname != '':
+            _data['surname'] = args.surname
+        if args.first_name != '':
+            _data['firstname'] = args.first_name
+        if args.phone_number != '':
+            _data['phone_number'] = args.phone_number
+        if args.address == '':
+            _data['address'] = args.address
+        update_contact(_id, _data)
+
 
     elif args.delete:
         # delete contact
         if not args.id:
-            arg_parser.error('A contact id is required')
+            arg_parser.error('A contact id is required --id [id]')
         else:
             _id = args.id
             delete_contact(_id)
