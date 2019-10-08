@@ -18,11 +18,6 @@ SERVER_URI = 'http://127.0.0.1'
 SERVER_BASE = SERVER_URI + ':' + PORT
 
 
-def search_contact():
-    """todo"""
-    pass
-
-
 def list_contacts() -> None:
     """ List Contacts
 
@@ -31,8 +26,17 @@ def list_contacts() -> None:
     :return: None
     """
     try:
-        response = requests.get(SERVER_BASE + '/contacts').json()
-        print(response)
+        response = requests.get(SERVER_BASE + '/contacts')
+        if response.status_code == 200:
+            _data = response.json()
+            for v in _data:
+                print('surname:      ' + v[1])
+                print('first name:   ' + v[2])
+                print('phone number: ' + v[3])
+                print('address:      ' + v[4])
+                print('--------------^')
+        else:
+            print('Error: ' + str(response.status_code) + ": " + response.text)
     except requests.HTTPError as e:
         argparse.ArgumentError(e)
 
@@ -40,7 +44,7 @@ def list_contacts() -> None:
 def create_contact(**kwargs) -> None:
     """ Creates a new contact
 
-    call to resource POST contacts/
+    call to resource POST /contacts
 
     :return: None
     """
@@ -56,21 +60,44 @@ def create_contact(**kwargs) -> None:
         if response.status_code == 200:
             print('contact have been saved!')
         else:
-            print('Error: ' + response.status_code + ' ' + response.json())
+            print('Error: ' + str(response.status_code) + ": " + response.text)
 
     except requests.HTTPError as e:
         argparse.ArgumentError(e)
 
 
-def get_contact():
-    """Read/Get a contact based on their id"""
-    pass
+def get_contact(_id: str) -> None:
+    """
+    Fetch a given contact if this exists, using GET /contacts/[id]
+    :param _id: contact_id
+    :return: None
+    """
+    try:
+        response = requests.get(SERVER_BASE + '/contacts/{}'.format(_id))
+        if response.status_code == 200:
+            v = response.json()
+            print('**************')
+            print('surname:      ' + v[1])
+            print('first name:   ' + v[2])
+            print('phone number: ' + v[3])
+            print('address:      ' + v[4])
+            print('-------------^')
+        else:
+            print('Error: ' + str(response.status_code) + ": " + response.text)
+    except requests.HTTPError as e:
+        print('An error happened: ' + e.strerror)
 
 
 def update_contact(_id: str, data: dict) -> None:
-    """todo"""
+    """
+    Update a contact using PUT /contacts/[id]
+
+    :param _id: contact_id
+    :param data: any valid key:value attribute
+    :return: None
+    """
     try:
-        response = requests.put(SERVER_BASE + '/contacts/{}'.format(_id), data=data)
+        response = requests.put(SERVER_BASE + '/contacts/{}'.format(_id), params=data)
         if response.status_code == 200:
             print('The contact id: {} has been update'.format(_id))
     except requests.HTTPError as e:
@@ -78,7 +105,11 @@ def update_contact(_id: str, data: dict) -> None:
 
 
 def delete_contact(contact_id: str) -> None:
-    """"""
+    """
+    Delete a contact using DELETE /contacts/[id]
+    :param contact_id: contact_ids
+    :return:
+    """
     try:
         response = requests.delete(SERVER_BASE + '/contacts/' + contact_id)
         if response.status_code == 200:
@@ -90,9 +121,15 @@ def delete_contact(contact_id: str) -> None:
         argparse.ArgumentError(e)
 
 
+def search_contact():
+    """todo"""
+    pass
+
+
 def _main() -> None:
     """
-
+    main function handle the script routing depending on the user input, depending on the user input, the function will
+    call more functions to execute the desired command given by the user or script interacting with.
     :return:
     """
     arg_parser = argparse.ArgumentParser(prog='python3 -m phone_book.py',
@@ -113,6 +150,8 @@ def _main() -> None:
     opt_group = arg_parser.add_mutually_exclusive_group()
     opt_group.add_argument('-l', '--list', help="lists entries in the phone book",
                            nargs='?', const=True, type=bool)
+    opt_group.add_argument('-g', '--get', help="get an entry by id from the phone book",
+                           nargs='?', const=True, type=bool)
     opt_group.add_argument('-c', '--create', help="creates a new entry in the phone book",
                            nargs='?', const=True, type=bool)
     opt_group.add_argument('-u', '--update', help="updates an existing entry in the phone book",
@@ -122,6 +161,7 @@ def _main() -> None:
     opt_group.add_argument('-s', '--search', help="search for an entry in the phonebook",
                            nargs='?', const=True, type=bool)
     opt_group.add_argument('-p', '--prettify', help="", nargs='?', const=True, type=bool)
+
     args = arg_parser.parse_args()
 
     if args.list:
@@ -161,7 +201,6 @@ def _main() -> None:
             _data['address'] = args.address
         update_contact(_id, _data)
 
-
     elif args.delete:
         # delete contact
         if not args.id:
@@ -169,11 +208,11 @@ def _main() -> None:
         else:
             _id = args.id
             delete_contact(_id)
-    elif args.search:
-        # search contact
-        pass
-
-    print('this worked')
+    elif args.get:
+        # get contact by id
+        if not args.id:
+            arg_parser.error('A contact id is required --id [id]')
+        get_contact(args.id)
 
 
 if __name__ == '__main__':
