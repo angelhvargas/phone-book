@@ -28,8 +28,9 @@ def list_contacts() -> None:
     try:
         response = requests.get(SERVER_BASE + '/contacts')
         if response.status_code == 200:
-            _data = response.json()
-            for v in _data:
+            resp_data = response.json()
+            for v in resp_data:
+                print('id:           ' + str(v[0]))
                 print('surname:      ' + v[1])
                 print('first name:   ' + v[2])
                 print('phone number: ' + v[3])
@@ -77,6 +78,7 @@ def get_contact(_id: str) -> None:
         if response.status_code == 200:
             v = response.json()
             print('**************')
+            print('id:           ' + str(v[0]))
             print('surname:      ' + v[1])
             print('first name:   ' + v[2])
             print('phone number: ' + v[3])
@@ -121,9 +123,21 @@ def delete_contact(contact_id: str) -> None:
         argparse.ArgumentError(e)
 
 
-def search_contact():
+def search_contact(_id: str, _data: dict):
     """todo"""
-    pass
+    try:
+        response = requests.get(SERVER_BASE + '/contacts', params=_data)
+        if response.status_code == 200:
+            resp_data = response.json()
+            for v in resp_data:
+                print('id:           ' + str(v[0]))
+                print('surname:      ' + v[1])
+                print('first name:   ' + v[2])
+                print('phone number: ' + v[3])
+                print('address:      ' + v[4])
+                print('--------------^')
+    except requests.HTTPError as e:
+        print('An error happened: ' + e.strerror)
 
 
 def _main() -> None:
@@ -214,6 +228,25 @@ def _main() -> None:
             arg_parser.error('A contact id is required --id [id]')
         get_contact(args.id)
 
+    elif args.search:
+        # search contact
+        if not args.surname and not args.first_name and not args.phone_number and not args.address:
+            arg_parser.error('at least one attribute is required: [--surname] '
+                             'or [--first-name] or [--phone-number] or [--address]')
+
+        _data = {}
+        _id = args.id
+
+        if args.surname != '':
+            _data['surname'] = args.surname
+        if args.first_name != '':
+            _data['firstname'] = args.first_name
+        if args.phone_number != '':
+            _data['phone_number'] = args.phone_number
+        if args.address == '':
+            _data['address'] = args.address
+
+        search_contact(_id, _data)
 
 if __name__ == '__main__':
     """Start Phone Book client app
