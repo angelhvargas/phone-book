@@ -58,12 +58,20 @@ Launch Application
 
 `export FLASK_ENV=development`
 
-###### 2. run server
+###### 2. run database migration command
+
+`flan init-db`
+
+###### 3. run server
 
 from the base directory execute:
 
 `flask run`
 
+
+###### 4. test with the consumer client
+
+phone_book.py
 
 Client usage
 ------------
@@ -76,15 +84,38 @@ Run from your console:
 
 #### some usage examples:
 
-`phonebook.py --list-all `
+```usage: python3 -m phone_book.py [-h] [--surname [SURNAME]]
+                                [--first-name [FIRST_NAME]]
+                                [--phone-number [PHONE_NUMBER]]
+                                [--address [ADDRESS]] [--id [ID]] [-l [LIST] |
+                                -g [GET] | -c [CREATE] | -u [UPDATE] | -d
+                                [DELETE] | -s [SEARCH]]
 
-`phonebook.py --find [args] `
+Phone Book API client -------------- Author: Angel Vargas
 
-`phonebook.py --create [args] `
+optional arguments:
+  -h, --help            show this help message and exit
+  --surname [SURNAME]   surname attribute --surname [surname]
+  --first-name [FIRST_NAME]
+                        first name attribute --first-name [first-name]
+  --phone-number [PHONE_NUMBER]
+                        phone number attribute --phone-number [phone-number]
+  --address [ADDRESS]
+  --id [ID]             contact id, required for operations such find and
+                        delete
+  -l [LIST], --list [LIST]
+                        lists entries in the phone book
+  -g [GET], --get [GET]
+                        get an entry by id from the phone book
+  -c [CREATE], --create [CREATE]
+                        creates a new entry in the phone book
+  -u [UPDATE], --update [UPDATE]
+                        updates an existing entry in the phone book
+  -d [DELETE], --delete [DELETE]
+                        deletes an entry in the phone book
+  -s [SEARCH], --search [SEARCH]
+                        search for an entry in the phonebook```
 
-`phonebook.py --delete [args] `
-
-`phonebook.py --search [args]`  
 
 Testing:
 --------
@@ -107,24 +138,26 @@ and open in your preferred browser `index.html` and inspect current test coverag
 Current test coverage:
 
 ```bash
+----------- coverage: platform win32, python 3.6.7-final-0 -----------
 Name                               Stmts   Miss  Cover
 ------------------------------------------------------
-phonebook\__init__.py                 28     23    18%
+phonebook\__init__.py                 28      6    79%
 phonebook\common\__init__.py           0      0   100%
 phonebook\common\contactentry.py      30      0   100%
-phonebook\common\phonebook.py         63      2    97%
+phonebook\common\phonebook.py         64      2    97%
 phonebook\config.py                   28      5    82%
 phonebook\db\DB.py                    32     10    69%
 phonebook\db\__init__.py              29      2    93%
-phonebook\phone_book_api.py           70     15    79%
+phonebook\phone_book_api.py           72     16    78%
 phonebook\support.py                   8      2    75%
 ------------------------------------------------------
-TOTAL                                288     59    80%
+TOTAL                                291     43    85%
+
 
 
 
 ```
 
-Work on progress, no releases yet.
+First pre-release is published.
 
 Author: Angel Vargas
